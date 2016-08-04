@@ -640,6 +640,37 @@ var defaultGenerator = exports.defaultGenerator = {
 		this.Literal(node.source, state);
 		output.write(';');
 	},
+	ExportDeclaration: function ExportDeclaration(node, state) {
+		var output = state.output;
+
+		output.write('export ');
+		if (node.default) output.write('default ');
+		if (node.declaration) {
+			this[node.declaration.type](node.declaration, state);
+		} else {
+			if (!node.default) output.write('{');
+			var specifiers = node.specifiers;var length = specifiers.length;
+
+			if (length > 0) {
+				for (var i = 0;;) {
+					var specifier = specifiers[i];
+					if (specifier.type === 'ExportBatchSpecifier') output.write('*');else {
+						var name = specifier.id.name;
+
+						output.write(name);
+						if (name !== specifier.name.name) output.write(' as ' + specifier.name.name);
+					}
+					if (++i < length) output.write(', ');else break;
+				}
+			}
+			if (!node.default) output.write('}');
+			if (node.source) {
+				output.write(' from ');
+				this.Literal(node.source, state);
+			}
+			output.write(';');
+		}
+	},
 	MethodDefinition: function MethodDefinition(node, state) {
 		var output = state.output;
 
