@@ -815,6 +815,21 @@ var defaultGenerator = exports.defaultGenerator = {
 			this[node.value.type](node.value, state);
 		}
 	},
+	PropertyPattern: function PropertyPattern(node, state) {
+		var output = state.output;
+
+		if (!node.shorthand) {
+			if (node.computed) {
+				output.write('[');
+				this[node.key.type](node.key, state);
+				output.write(']');
+			} else {
+				this[node.key.type](node.key, state);
+			}
+			output.write(': ');
+		}
+		this[node.pattern.type](node.pattern, state);
+	},
 	ObjectPattern: function ObjectPattern(node, state) {
 		var output = state.output;
 
@@ -823,7 +838,7 @@ var defaultGenerator = exports.defaultGenerator = {
 			var properties = node.properties;var length = properties.length;
 
 			for (var i = 0;;) {
-				this.Property(properties[i], state);
+				this[properties[i].type](properties[i], state);
 				if (++i < length) output.write(', ');else break;
 			}
 		}
