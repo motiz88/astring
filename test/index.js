@@ -4,19 +4,7 @@ var path = require( 'path' )
 var acorn = require( 'acorn' )
 var astravel = require( 'astravel' )
 var normalizeNewline = require( 'normalize-newline' )
-var astring
-try {
-	astring = require( '../dist/astring.debug' )
-	console.log( 'Using ./dist/astring.debug.js' )
-} catch ( error ) {
-	try {
-		astring = require( '../dist/astring.min' )
-		console.log( 'Using ./dist/astring.min.js' )
-	} catch ( error ) {
-		astring = require( '../dist/astring' )
-		console.log( 'Using ./dist/astring.js' )
-	}
-}
+var astring = require( '../dist/astring' )
 
 
 var stripLocation = astravel.makeTraveler( {
@@ -104,4 +92,21 @@ describe( 'Comment generation', function() {
 			assert.equal( astring( ast, options ), code )
 		} )
 	} )
+} )
+
+describe( 'Unknown nodes', function() {
+	var ast = { type: 'Program', body: [ { type: 'Bogus' } ] };
+	it( 'should throw errors', function() {
+		assert.throws(
+			function() { astring( ast ) },
+			TypeError
+		)
+	} )
+	if ( typeof Proxy === 'function' )
+		it( 'should throw errors mentioning node type', function() {
+			assert.throws(
+				function() { astring( ast ) },
+				function( err ) { return err instanceof TypeError && err.message.indexOf( 'Bogus' ) !== -1 }
+			)
+		} )
 } )
