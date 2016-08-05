@@ -4,7 +4,7 @@ var path = require( 'path' )
 var acorn = require( 'acorn' )
 var astravel = require( 'astravel' )
 var normalizeNewline = require( 'normalize-newline' )
-var astring = require( '../dist/astring.debug' )
+var astring = require( '../dist/astring' )
 
 
 var stripLocation = astravel.makeTraveler( {
