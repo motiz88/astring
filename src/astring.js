@@ -979,6 +979,16 @@ module.exports = function astring( node, options ) {
 		// Internal state
 		noTrailingSemicolon: false
 	}
+	if ( process && process.env && process.env.NODE_ENV !== 'production' && typeof Proxy === 'function' ) {
+		state.generator = new Proxy( state.generator, {
+			get(target, prop, receiver) {
+				if (typeof target[prop] !== 'function') {
+					throw new TypeError(`Unimplemented node type ${prop}`);
+				}
+				return target[prop];
+			}
+		} )
+	}
 	// Travel through the AST node and generate the code
 	state.generator[ node.type ]( node, state )
 	const { output } = state
