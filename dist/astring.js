@@ -602,7 +602,7 @@
 							var name = specifier.id.name;
 
 							output.write(name);
-							if (name !== specifier.name.name) output.write(' as ' + specifier.name.name);
+							if (specifier.name && name !== specifier.name.name) output.write(' as ' + specifier.name.name);
 						}
 						if (++i < length) output.write(', ');else break;
 					}
