@@ -92,3 +92,20 @@ describe( 'Comment generation', function() {
 		} )
 	} )
 } )
+
+describe( 'Unknown nodes', function() {
+	var ast = { type: 'Program', body: [ { type: 'Bogus' } ] };
+	it( 'should throw errors', function() {
+		assert.throws(
+			function() { astring( ast ) },
+			TypeError
+		)
+	} )
+	if ( typeof Proxy === 'function' )
+		it( 'should throw errors mentioning node type', function() {
+			assert.throws(
+				function() { astring( ast ) },
+				function( err ) { return err instanceof TypeError && err.message.indexOf( 'Bogus' ) !== -1 }
+			)
+		} )
+} )
