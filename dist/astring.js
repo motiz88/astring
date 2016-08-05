@@ -563,14 +563,15 @@ var defaultGenerator = exports.defaultGenerator = {
 			while (i < length) {
 				if (i > 0) output.write(', ');
 				specifier = specifiers[i];
+				var local = specifier.local || specifier.id;
 				var type = specifier.type[6];
 				if (type === 'D') {
 					// ImportDefaultSpecifier
-					output.write(specifier.local.name);
+					output.write(local.name);
 					i++;
 				} else if (type === 'N') {
 					// ImportNamespaceSpecifier
-					output.write('* as ' + specifier.local.name);
+					output.write('* as ' + local.name);
 					i++;
 				} else {
 					// ImportSpecifier
@@ -581,11 +582,11 @@ var defaultGenerator = exports.defaultGenerator = {
 				output.write('{');
 				for (;;) {
 					specifier = specifiers[i];
-					var name = specifier.imported.name;
-
+					var name = specifier.imported ? specifier.imported.name : specifier.name;
 					output.write(name);
-					if (name !== specifier.local.name) {
-						output.write(' as ' + specifier.local.name);
+					var _local = specifier.local || specifier.id;
+					if (name !== _local.name) {
+						output.write(' as ' + _local.name);
 					}
 					if (++i < length) output.write(', ');else break;
 				}
