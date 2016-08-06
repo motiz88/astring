@@ -778,17 +778,17 @@ const defaultGenerator = {
 			this.MethodDefinition( node, state )
 		} else {
 			const { output } = state
-			if ( !node.shorthand ) {
-				if ( node.computed ) {
-					output.write( '[' )
-					this[ node.key.type ]( node.key, state )
-					output.write( ']' )
-				} else {
-					this[ node.key.type ]( node.key, state )
-				}
-				output.write( ': ' )
+			if ( node.computed ) {
+				output.write( '[' )
+				this[ node.key.type ]( node.key, state )
+				output.write( ']' )
+			} else {
+				this[ node.key.type ]( node.key, state )
 			}
-			this[ node.value.type ]( node.value, state )
+			if ( !node.shorthand ) {
+				output.write( ': ' )
+				this[ node.value.type ]( node.value, state )
+			}
 		}
 	},
 	PropertyPattern( node, state ) {
