@@ -89,6 +89,32 @@ function formatSequence( nodes, state, traveler ) {
 	output.write( ')' )
 }
 
+function formatSequenceWithDefaults( nodes, defaults, state, traveler ) {
+	/*
+	Formats a sequence of `nodes`.
+	*/
+	const { output } = state
+	output.write( '(' )
+	if ( nodes != null && nodes.length > 0 ) {
+		traveler[ nodes[ 0 ].type ]( nodes[ 0 ], state )
+		if (defaults && defaults.length > 0) {
+			output.write( ' = ' );
+			traveler[ defaults[ 0 ].type ]( defaults[ 0 ], state )
+		}
+		const { length } = nodes
+		for ( let i = 1; i < length; i++ ) {
+			let param = nodes[ i ]
+			output.write( ', ' )
+			traveler[ param.type ]( param, state )
+			if (defaults && defaults.length > i) {
+				output.write( ' = ' );
+				traveler[ defaults[ i ].type ]( defaults[ i ], state )
+			}
+		}
+	}
+	output.write( ')' )
+}
+
 
 function formatBinaryExpressionPart( node, parentNode, isRightHand, state, traveler ) {
 	/*
@@ -423,7 +449,7 @@ export const defaultGenerator = {
 		output.write( node.generator ? 'function* ' : 'function ' )
 		if ( node.id )
 			output.write( node.id.name )
-		formatSequence( node.params, state, this )
+		formatSequenceWithDefaults( node.params, node.defaults, state, this )
 		output.write( ' ' )
 		this[ node.body.type ]( node.body, state )
 	},
