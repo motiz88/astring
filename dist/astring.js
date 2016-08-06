@@ -97,6 +97,31 @@
 		output.write(')');
 	}
 
+	function formatSequenceWithDefaults(nodes, defaults, state, traveler) {
+		var output = state.output;
+
+		output.write('(');
+		if (nodes != null && nodes.length > 0) {
+			traveler[nodes[0].type](nodes[0], state);
+			if (defaults && defaults.length > 0) {
+				output.write(' = ');
+				traveler[defaults[0].type](defaults[0], state);
+			}
+			var length = nodes.length;
+
+			for (var i = 1; i < length; i++) {
+				var param = nodes[i];
+				output.write(', ');
+				traveler[param.type](param, state);
+				if (defaults && defaults.length > i) {
+					output.write(' = ');
+					traveler[defaults[i].type](defaults[i], state);
+				}
+			}
+		}
+		output.write(')');
+	}
+
 	function formatBinaryExpressionPart(node, parentNode, isRightHand, state, traveler) {
 		/*
   Formats into the `output` stream a left-hand or right-hand expression `node` from a binary expression applying the provided `operator`.
@@ -451,7 +476,7 @@
 
 			output.write(node.generator ? 'function* ' : 'function ');
 			if (node.id) output.write(node.id.name);
-			formatSequence(node.params, state, this);
+			formatSequenceWithDefaults(node.params, node.defaults, state, this);
 			output.write(' ');
 			this[node.body.type](node.body, state);
 		},
