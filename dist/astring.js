@@ -617,9 +617,11 @@
 			if (node.declaration) {
 				this[node.declaration.type](node.declaration, state);
 			} else {
-				if (!node.default) output.write('{');
 				var specifiers = node.specifiers;var length = specifiers.length;
 
+
+				var isDefaultOrBatch = node.default || length === 1 && specifiers[0].type === 'ExportBatchSpecifier';
+				if (!isDefaultOrBatch) output.write('{');
 				if (length > 0) {
 					for (var i = 0;;) {
 						var specifier = specifiers[i];
@@ -632,10 +634,10 @@
 						if (++i < length) output.write(', ');else break;
 					}
 				}
-				if (!node.default) output.write('}');
+				if (!isDefaultOrBatch) output.write('}');
 				if (node.source) {
 					output.write(' from ');
-					this.Literal(node.source, state);
+					this[node.source.type](node.source, state);
 				}
 				output.write(';');
 			}
