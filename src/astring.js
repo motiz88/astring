@@ -126,8 +126,10 @@ function formatBinaryExpressionPart( node, parentNode, isRightHand, state, trave
 	const nodePrecedence = EXPRESSIONS_PRECEDENCE[ node.type ]
 	const parentNodePrecedence = EXPRESSIONS_PRECEDENCE[ parentNode.type ]
 	if ( nodePrecedence > parentNodePrecedence ) {
-		traveler[ node.type ]( node, state )
-		return
+		if ( parentNode.operator !== '**' || isRightHand || nodePrecedence !== 15 /* UnaryExpression */ ) {
+			traveler[ node.type ]( node, state )
+			return
+		}
 	} else if ( nodePrecedence === parentNodePrecedence ) {
 		if ( nodePrecedence === 13 || nodePrecedence === 14 ) {
 			// Either `LogicalExpression` or `BinaryExpression`
