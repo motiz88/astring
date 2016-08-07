@@ -586,7 +586,7 @@ export const defaultGenerator = {
 		if ( params != null ) {
 			if ( params.length === 1 && params[ 0 ].type[ 0 ] === 'I' ) {
 				// If params[0].type[0] starts with 'I', it can't be `ImportDeclaration` nor `IfStatement` and thus is `Identifier`
-				output.write( params[ 0 ].name )
+				this.Identifier( params[ 0 ], state )
 			} else {
 				formatSequence( node.params, state, this )
 			}
