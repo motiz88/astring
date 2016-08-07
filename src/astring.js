@@ -126,8 +126,10 @@ function formatBinaryExpressionPart( node, parentNode, isRightHand, state, trave
 	const nodePrecedence = EXPRESSIONS_PRECEDENCE[ node.type ]
 	const parentNodePrecedence = EXPRESSIONS_PRECEDENCE[ parentNode.type ]
 	if ( nodePrecedence > parentNodePrecedence ) {
-		traveler[ node.type ]( node, state )
-		return
+		if ( parentNode.operator !== '**' || isRightHand || nodePrecedence !== 15 /* UnaryExpression */ ) {
+			traveler[ node.type ]( node, state )
+			return
+		}
 	} else if ( nodePrecedence === parentNodePrecedence ) {
 		if ( nodePrecedence === 13 || nodePrecedence === 14 ) {
 			// Either `LogicalExpression` or `BinaryExpression`
@@ -503,7 +505,7 @@ const defaultGenerator = {
 				if ( i > 0 )
 					output.write( ', ' )
 				specifier = specifiers[ i ]
-				const local = specifier.local || specifier.id
+				const local = specifier.local || specifier.name || specifier.id
 				const type = specifier.type[ 6 ]
 				if (type === 'D') {
 					// ImportDefaultSpecifier
@@ -522,9 +524,10 @@ const defaultGenerator = {
 				output.write( '{' )
 				for ( ; ; ) {
 					specifier = specifiers[ i ]
-					let name = specifier.imported ? specifier.imported.name : specifier.name
-					output.write( name )
-					const local = specifier.local || specifier.id
+					let name = specifier.imported ? specifier.imported.name : specifier.id
+					if ( name.type )
+						this[ name.type ]( name, state )
+					const local = specifier.local || specifier.name
 					if ( name !== local.name ) {
 						output.write( ' as ' + local.name )
 					}
@@ -660,7 +663,7 @@ const defaultGenerator = {
 		if ( params != null ) {
 			if ( params.length === 1 && params[ 0 ].type[ 0 ] === 'I' ) {
 				// If params[0].type[0] starts with 'I', it can't be `ImportDeclaration` nor `IfStatement` and thus is `Identifier`
-				output.write( params[ 0 ].name )
+				this.Identifier( params[ 0 ], state )
 			} else {
 				formatSequence( node.params, state, this )
 			}
