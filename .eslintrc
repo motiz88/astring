@@ -6,7 +6,6 @@
 			"SwitchCase": 1
 		}],
 		"quotes": ["error", "single"],
-		"linebreak-style": ["error", "unix"],
 		"semi": ["error", "never"],
 		"no-underscore-dangle": "off",
 		"no-multi-spaces": "error",
