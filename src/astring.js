@@ -8,7 +8,7 @@
 // Please use the GitHub bug tracker to report issues:
 // https://github.com/davidbonnet/astring/issues
 
-require( 'string.prototype.repeat' )
+const repeat = require( './repeat' )
 
 const { stringify } = JSON
 
@@ -207,7 +207,7 @@ let
 
 const defaultGenerator = {
 	Program( node, state ) {
-		const indent = state.indent.repeat( state.indentLevel )
+		const indent = repeat( state.indent, state.indentLevel )
 		const { lineEnd, output, writeComments } = state
 		if ( writeComments && node.comments != null )
 			formatComments( node.comments, output, indent, lineEnd )
@@ -225,7 +225,7 @@ const defaultGenerator = {
 			formatComments( node.trailingComments, output, indent, lineEnd )
 	},
 	BlockStatement: BlockStatement = function( node, state ) {
-		const indent = state.indent.repeat( state.indentLevel++ )
+		const indent = repeat( state.indent, state.indentLevel++ )
 		const { lineEnd, output, writeComments } = state
 		const statementIndent = indent + state.indent
 		output.write( '{' )
@@ -315,7 +315,7 @@ const defaultGenerator = {
 		this[ node.body.type ]( node.body, state )
 	},
 	SwitchStatement( node, state ) {
-		const indent = state.indent.repeat( state.indentLevel++ )
+		const indent = repeat( state.indent, state.indentLevel++ )
 		const { lineEnd, output, writeComments } = state
 		state.indentLevel++
 		const caseIndent = indent + state.indent
@@ -672,7 +672,7 @@ const defaultGenerator = {
 	},
 	ArrayPattern: ArrayExpression,
 	ObjectExpression( node, state ) {
-		const indent = state.indent.repeat( state.indentLevel++ )
+		const indent = repeat( state.indent, state.indentLevel++ )
 		const { lineEnd, output, writeComments } = state
 		const propertyIndent = indent + state.indent
 		output.write( '{' )

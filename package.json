@@ -27,7 +27,7 @@
   "author": "David Bonnet <david@bonnet.cc>",
   "license": "MIT",
   "dependencies": {
-    "string.prototype.repeat": "^0.2.0"
+    "repeat-string": "^1.5.4"
   },
   "devDependencies": {
     "acorn": "^3.0.4",
