@@ -942,4 +942,4 @@ module.exports = function astring( node, options ) {
 	return output.data != null ? output.data : output
 }
 
-module.exports.defaultGenerator = defaultGenerator;
+module.exports.defaultGenerator = defaultGenerator
