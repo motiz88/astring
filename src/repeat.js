@@ -4,4 +4,4 @@ function nativeRepeat( s, count ) {
 
 const libraryRepeat = require( 'repeat-string' )
 
-module.exports.repeat = String.prototype.repeat ? nativeRepeat : libraryRepeat
+module.exports = String.prototype.repeat ? nativeRepeat : libraryRepeat
