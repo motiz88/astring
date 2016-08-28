@@ -7,7 +7,7 @@
     "astring": "./bin/astring"
   },
   "scripts": {
-    "test": "eslint src/astring.js && npm run build-debug && mocha test/index.js",
+    "test": "eslint src/astring.js && npm run build && mocha test/index.js",
     "test-live": "mocha --watch test/index.js",
     "test-full": "node test/scripts.js",
     "prepublish": "npm run build",
